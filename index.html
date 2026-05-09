@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Random Key Admin Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="brand-bar" aria-label="Application header">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+          <span></span>
+        </div>
+        <div>
+          <p class="eyebrow">Admin Panel</p>
+          <h1>Random Key Generator</h1>
+        </div>
+        <p class="system-pill" id="sessionState">Locked</p>
+      </header>
+
+      <main>
+        <section class="login-view" id="loginView">
+          <form class="login-panel" id="loginForm" autocomplete="off">
+            <div class="panel-heading">
+              <p class="eyebrow">Secure Entry</p>
+              <h2>অ্যাডমিন লগইন</h2>
+            </div>
+
+            <label class="field">
+              <span>পাসওয়ার্ড</span>
+              <input id="adminPassword" type="password" placeholder="Admin password" required>
+            </label>
+
+            <button class="primary-button" type="submit">লগইন</button>
+            <p class="form-message" id="loginMessage" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="admin-view hidden" id="adminView" aria-hidden="true">
+          <aside class="side-rail">
+            <div class="side-title">
+              <p class="eyebrow">Control Room</p>
+              <h2>কোড প্যানেল</h2>
+            </div>
+
+            <div class="stat-stack">
+              <div class="stat-box">
+                <span>Random Length</span>
+                <strong id="lengthStat">8</strong>
+              </div>
+              <div class="stat-box">
+                <span>Batch</span>
+                <strong id="batchStat">4</strong>
+              </div>
+              <div class="stat-box">
+                <span>Pool</span>
+                <strong id="poolStat">0</strong>
+              </div>
+            </div>
+
+            <button class="ghost-button" id="generateSideButton" type="button">Generate</button>
+            <button class="danger-button" id="logoutButton" type="button">লগআউট</button>
+          </aside>
+
+          <div class="work-area">
+            <section class="tool-panel generator-panel" aria-labelledby="generatorTitle">
+              <div class="panel-heading wide-heading">
+                <div>
+                  <p class="eyebrow">Builder</p>
+                  <h2 id="generatorTitle">পাসওয়ার্ড / কোড তৈরি করুন</h2>
+                </div>
+                <button class="icon-button" id="resetButton" type="button" title="Reset settings" aria-label="Reset settings">↻</button>
+              </div>
+
+              <form id="generatorForm" class="generator-grid">
+                <label class="field">
+                  <span>প্রিফিক্স</span>
+                  <input id="prefixInput" type="text" placeholder="যেমন: VIP-">
+                </label>
+
+                <label class="field">
+                  <span>সাফিক্স</span>
+                  <input id="suffixInput" type="text" placeholder="যেমন: -BD">
+                </label>
+
+                <label class="field">
+                  <span>র্যান্ডম অক্ষর</span>
+                  <input id="lengthInput" type="number" min="1" max="128" value="8">
+                </label>
+
+                <label class="field">
+                  <span>কতগুলো</span>
+                  <input id="quantityInput" type="number" min="1" max="100" value="4">
+                </label>
+
+                <div class="preset-row" aria-label="Length presets">
+                  <button type="button" class="preset-button" data-length="3">3</button>
+                  <button type="button" class="preset-button" data-length="5">5</button>
+                  <button type="button" class="preset-button" data-length="7">7</button>
+                  <button type="button" class="preset-button is-active" data-length="8">8</button>
+                  <button type="button" class="preset-button" data-length="10">10</button>
+                  <button type="button" class="preset-button" data-length="16">16</button>
+                </div>
+
+                <fieldset class="option-panel">
+                  <legend>টাইপ সিলেক্ট</legend>
+                  <label class="check-tile">
+                    <input type="checkbox" data-pool="letters" checked>
+                    <span>ওয়ার্ড / লেটার</span>
+                  </label>
+                  <label class="check-tile">
+                    <input type="checkbox" data-pool="numbers" checked>
+                    <span>নাম্বার</span>
+                  </label>
+                  <label class="check-tile">
+                    <input type="checkbox" data-pool="symbols">
+                    <span>সিম্বল</span>
+                  </label>
+                  <label class="check-tile">
+                    <input type="checkbox" data-pool="arrows">
+                    <span>অ্যারো</span>
+                  </label>
+                </fieldset>
+
+                <fieldset class="option-panel">
+                  <legend>নিয়ন্ত্রণ</legend>
+                  <label class="check-tile">
+                    <input id="avoidSimilarInput" type="checkbox" checked>
+                    <span>মিল আছে এমন অক্ষর বাদ</span>
+                  </label>
+                  <label class="check-tile">
+                    <input id="mustIncludeInput" type="checkbox" checked>
+                    <span>প্রতি টাইপ থেকে অন্তত ১টি</span>
+                  </label>
+                  <label class="check-tile">
+                    <input id="uppercaseInput" type="checkbox">
+                    <span>সব বড় হাতের</span>
+                  </label>
+                </fieldset>
+
+                <label class="field custom-field">
+                  <span>নিজের অক্ষর</span>
+                  <textarea id="customInput" rows="3" placeholder="যেমন: ABC789 অথবা @#%"></textarea>
+                </label>
+
+                <div class="action-row">
+                  <button class="primary-button" type="submit">Generate Code</button>
+                  <button class="ghost-button" id="copyAllButton" type="button">সব কপি</button>
+                </div>
+
+                <p class="form-message generator-message" id="generatorMessage" role="status" aria-live="polite"></p>
+              </form>
+            </section>
+
+            <section class="tool-panel result-panel" aria-labelledby="resultTitle">
+              <div class="panel-heading wide-heading">
+                <div>
+                  <p class="eyebrow">Viewer</p>
+                  <h2 id="resultTitle">চার কর্নার রেজাল্ট বক্স</h2>
+                </div>
+                <button class="icon-button" id="clearButton" type="button" title="Clear results" aria-label="Clear results">×</button>
+              </div>
+
+              <div class="result-grid" id="resultGrid" aria-live="polite"></div>
+              <p class="empty-state" id="emptyState">এখনো কোনো কোড তৈরি হয়নি।</p>
+            </section>
+
+            <section class="tool-panel history-panel" aria-labelledby="historyTitle">
+              <div class="panel-heading wide-heading">
+                <div>
+                  <p class="eyebrow">History</p>
+                  <h2 id="historyTitle">শেষ তৈরি করা ব্যাচ</h2>
+                </div>
+                <button class="icon-button" id="clearHistoryButton" type="button" title="Clear history" aria-label="Clear history">⌫</button>
+              </div>
+              <div class="history-list" id="historyList"></div>
+            </section>
+
+            <section class="tool-panel password-panel" aria-labelledby="passwordTitle">
+              <div class="panel-heading">
+                <p class="eyebrow">Access</p>
+                <h2 id="passwordTitle">অ্যাডমিন পাসওয়ার্ড বদলান</h2>
+              </div>
+              <form id="passwordForm" class="password-form">
+                <label class="field">
+                  <span>বর্তমান পাসওয়ার্ড</span>
+                  <input id="currentPasswordInput" type="password" autocomplete="current-password">
+                </label>
+                <label class="field">
+                  <span>নতুন পাসওয়ার্ড</span>
+                  <input id="newPasswordInput" type="password" autocomplete="new-password" minlength="4">
+                </label>
+                <button class="ghost-button" type="submit">সেভ</button>
+                <p class="form-message" id="passwordMessage" role="status" aria-live="polite"></p>
+              </form>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
