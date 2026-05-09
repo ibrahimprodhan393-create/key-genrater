@@ -7,6 +7,7 @@ Upload these files to a new GitHub repository:
 - `app.js`
 - `server.js`
 - `package.json`
+- `vercel.json`
 - `README.md`
 - `.gitignore`
 - `GITHUB_UPLOAD_FILES.md`
@@ -38,3 +39,26 @@ Default admin password:
 ```text
 admin123
 ```
+
+## Vercel
+
+Do not put `npm start` in Vercel's Install Command.
+
+- Framework Preset: `Other`
+- Install Command: empty
+- Build Command: `echo No build needed`
+- Output Directory: `.`
+
+The included `vercel.json` already sets these values.
+
+## Render
+
+Static Site:
+
+- Build Command: `echo No build needed`
+- Publish Directory: `.`
+
+Web Service:
+
+- Build Command: `npm install`
+- Start Command: `HOST=0.0.0.0 npm start`

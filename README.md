@@ -24,3 +24,26 @@ npm start
 - Batch generation
 - Four-corner style result boxes
 - Copy single code, copy all, copy history batch
+
+## Vercel Deploy
+
+Vercel-এ `Install Command` হিসেবে `npm start` দেবেন না। এই সাইট static, তাই build-এর সময় server চালানোর দরকার নেই।
+
+- Framework Preset: `Other`
+- Install Command: খালি রাখুন
+- Build Command: `echo No build needed`
+- Output Directory: `.`
+
+এই প্রোজেক্টে `vercel.json` দেওয়া আছে, তাই GitHub থেকে redeploy করলে Vercel এই সেটিংস নিজে নিতে পারবে।
+
+## Render Deploy
+
+Static Site হিসেবে দিলে:
+
+- Build Command: `echo No build needed`
+- Publish Directory: `.`
+
+Web Service হিসেবে দিলে:
+
+- Build Command: `npm install`
+- Start Command: `HOST=0.0.0.0 npm start`
