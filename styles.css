@@ -262,6 +262,7 @@ textarea:focus {
 .ghost-button,
 .danger-button,
 .preset-button,
+.day-preset-button,
 .icon-button,
 .copy-button {
   min-height: 42px;
@@ -275,6 +276,7 @@ textarea:focus {
 .ghost-button:hover,
 .danger-button:hover,
 .preset-button:hover,
+.day-preset-button:hover,
 .icon-button:hover,
 .copy-button:hover {
   transform: translateY(-1px);
@@ -292,6 +294,7 @@ textarea:focus {
 .ghost-button:active,
 .danger-button:active,
 .preset-button:active,
+.day-preset-button:active,
 .icon-button:active,
 .copy-button:active {
   transform: translateY(0);
@@ -400,7 +403,19 @@ textarea:focus {
   gap: 8px;
 }
 
-.preset-button {
+.day-options-field {
+  grid-column: span 3;
+}
+
+.day-preset-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(72px, 1fr));
+  gap: 8px;
+}
+
+.preset-button,
+.day-preset-button {
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.055);
   color: #d9e8e8;
@@ -589,6 +604,10 @@ textarea:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .day-options-field {
+    grid-column: 1 / -1;
+  }
+
   .password-form {
     grid-template-columns: 1fr;
   }
@@ -628,6 +647,10 @@ textarea:focus {
 
   .preset-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .day-preset-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .wide-heading {

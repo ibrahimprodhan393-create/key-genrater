@@ -16,11 +16,12 @@
   };
 
   const DEFAULT_SETTINGS = {
-    prefix: "",
+    prefix: "WEB-",
     middle: "",
     suffix: "",
-    middleIndex: "",
-    length: 8,
+    dayOptions: "1DAY-,5DAY-,7DAY-,10DAY-,30DAY-",
+    randomDay: true,
+    length: 5,
     quantity: 4,
     custom: "",
     selectedPools: ["letters", "numbers"],
@@ -58,7 +59,8 @@
     refs.prefixInput = $("#prefixInput");
     refs.middleInput = $("#middleInput");
     refs.suffixInput = $("#suffixInput");
-    refs.middleIndexInput = $("#middleIndexInput");
+    refs.dayOptionsInput = $("#dayOptionsInput");
+    refs.randomDayInput = $("#randomDayInput");
     refs.lengthInput = $("#lengthInput");
     refs.quantityInput = $("#quantityInput");
     refs.customInput = $("#customInput");
@@ -95,6 +97,15 @@
       button.addEventListener("click", () => {
         refs.lengthInput.value = button.dataset.length;
         setActivePreset(Number(button.dataset.length));
+        saveSettings();
+        updateStats();
+      });
+    });
+
+    $$(".day-preset-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        refs.middleInput.value = button.dataset.day;
+        refs.randomDayInput.checked = false;
         saveSettings();
         updateStats();
       });
@@ -264,7 +275,8 @@
       prefix: refs.prefixInput.value,
       middle: refs.middleInput.value,
       suffix: refs.suffixInput.value,
-      middleIndex: clampOptionalNumber(refs.middleIndexInput.value, 0, length),
+      dayOptions: refs.dayOptionsInput.value,
+      randomDay: refs.randomDayInput.checked,
       length,
       quantity: clampNumber(refs.quantityInput.value, 1, 100, DEFAULT_SETTINGS.quantity),
       custom: refs.customInput.value,
@@ -279,7 +291,8 @@
     refs.prefixInput.value = settings.prefix;
     refs.middleInput.value = settings.middle;
     refs.suffixInput.value = settings.suffix;
-    refs.middleIndexInput.value = settings.middleIndex;
+    refs.dayOptionsInput.value = settings.dayOptions;
+    refs.randomDayInput.checked = settings.randomDay;
     refs.lengthInput.value = settings.length;
     refs.quantityInput.value = settings.quantity;
     refs.customInput.value = settings.custom;
@@ -355,12 +368,21 @@
   }
 
   function composeCode(randomPart, settings) {
-    const position = settings.middleIndex === "" ? Math.floor(randomPart.length / 2) : settings.middleIndex;
-    const safePosition = Math.min(randomPart.length, Math.max(0, position));
-    const left = randomPart.slice(0, safePosition);
-    const right = randomPart.slice(safePosition);
+    const segment = pickMiddleSegment(settings);
+    return `${settings.prefix}${segment}${randomPart}${settings.suffix}`;
+  }
 
-    return `${settings.prefix}${left}${settings.middle}${right}${settings.suffix}`;
+  function pickMiddleSegment(settings) {
+    if (!settings.randomDay) {
+      return settings.middle;
+    }
+
+    const options = parseList(settings.dayOptions);
+    if (!options.length) {
+      return settings.middle;
+    }
+
+    return options[randomInt(options.length)];
   }
 
   function pickChar(chars) {
@@ -441,6 +463,8 @@
         quantity: settings.quantity,
         prefix: settings.prefix,
         middle: settings.middle,
+        dayOptions: settings.dayOptions,
+        randomDay: settings.randomDay,
         suffix: settings.suffix
       }
     });
@@ -540,15 +564,15 @@
     return Math.min(max, Math.max(min, Math.floor(number)));
   }
 
-  function clampOptionalNumber(value, min, max) {
-    if (value === "") return "";
-    const number = Number(value);
-    if (!Number.isFinite(number)) return "";
-    return Math.min(max, Math.max(min, Math.floor(number)));
-  }
-
   function uniqueChars(value) {
     return Array.from(new Set(Array.from(value))).join("");
+  }
+
+  function parseList(value) {
+    return value
+      .split(/[,\n]+/)
+      .map((item) => item.trim())
+      .filter(Boolean);
   }
 
   function safeJsonParse(value, fallback) {

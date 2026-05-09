@@ -23,7 +23,9 @@ http://127.0.0.1:8777
 ## Features
 
 - Prefix, middle text, and suffix support
-- Optional middle position for inserting fixed text into the random part
+- Demo-style format such as `WEB-7DAY-37RX3`
+- Random day options such as `1DAY-`, `5DAY-`, `7DAY-`, `10DAY-`, `30DAY-`
+- Fixed prefix and day/middle segment with random code at the end
 - Length presets: 3, 5, 7, 8, 10, 16
 - Letters, numbers, symbols, arrows, and custom character pool
 - Batch generation

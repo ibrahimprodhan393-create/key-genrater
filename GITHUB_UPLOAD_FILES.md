@@ -43,8 +43,9 @@ admin123
 ## Latest Features
 
 - English-only interface text
-- Prefix, middle text, and suffix fields
-- Optional middle position
+- Demo-style output such as `WEB-7DAY-37RX3`
+- Random day options: `1DAY-`, `5DAY-`, `7DAY-`, `10DAY-`, `30DAY-`
+- Prefix, day/middle segment, suffix, and random end code fields
 - Futuristic dark UI
 
 ## Vercel
