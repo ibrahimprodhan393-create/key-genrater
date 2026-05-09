@@ -40,6 +40,13 @@ Default admin password:
 admin123
 ```
 
+## Latest Features
+
+- English-only interface text
+- Prefix, middle text, and suffix fields
+- Optional middle position
+- Futuristic dark UI
+
 ## Vercel
 
 Do not put `npm start` in Vercel's Install Command.

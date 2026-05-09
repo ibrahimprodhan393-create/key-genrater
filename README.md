@@ -1,49 +1,54 @@
 # Random Key Admin Generator
 
-ছোট static ওয়েবসাইট। ব্রাউজারে `index.html` খুললেই চলবে।
+A small static admin website for generating random passwords, keys, and codes.
 
-লোকাল সার্ভার দিয়ে চালাতে:
+## Run Locally
 
 ```bash
 npm start
 ```
 
-তারপর খুলুন: `http://127.0.0.1:8777`
+Open:
+
+```text
+http://127.0.0.1:8777
+```
 
 ## Login
 
 - Default admin password: `admin123`
-- অ্যাডমিন প্যানেল থেকে পাসওয়ার্ড বদলানো যাবে।
-- পাসওয়ার্ড, settings এবং history ব্রাউজারের `localStorage`-এ সেভ থাকে।
+- The admin password can be changed inside the panel.
+- Password hash, settings, and history are stored in browser `localStorage`.
 
 ## Features
 
-- Prefix এবং suffix রেখে random অংশ তৈরি
-- Length preset: 3, 5, 7, 8, 10, 16
-- Letters, numbers, symbols, arrows এবং custom character pool
+- Prefix, middle text, and suffix support
+- Optional middle position for inserting fixed text into the random part
+- Length presets: 3, 5, 7, 8, 10, 16
+- Letters, numbers, symbols, arrows, and custom character pool
 - Batch generation
-- Four-corner style result boxes
-- Copy single code, copy all, copy history batch
+- Futuristic corner-frame result cards
+- Copy single code, copy all codes, and copy history batch
 
 ## Vercel Deploy
 
-Vercel-এ `Install Command` হিসেবে `npm start` দেবেন না। এই সাইট static, তাই build-এর সময় server চালানোর দরকার নেই।
+Do not put `npm start` in Vercel's Install Command. This project is static, so no server should run during build.
 
 - Framework Preset: `Other`
-- Install Command: খালি রাখুন
+- Install Command: empty
 - Build Command: `echo No build needed`
 - Output Directory: `.`
 
-এই প্রোজেক্টে `vercel.json` দেওয়া আছে, তাই GitHub থেকে redeploy করলে Vercel এই সেটিংস নিজে নিতে পারবে।
+The included `vercel.json` sets these values for Vercel.
 
 ## Render Deploy
 
-Static Site হিসেবে দিলে:
+Static Site:
 
 - Build Command: `echo No build needed`
 - Publish Directory: `.`
 
-Web Service হিসেবে দিলে:
+Web Service:
 
 - Build Command: `npm install`
 - Start Command: `HOST=0.0.0.0 npm start`

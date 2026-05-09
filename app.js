@@ -12,12 +12,14 @@
     letters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
     numbers: "0123456789",
     symbols: "!@#$%^&*()-_=+[]{};:,.?/|~",
-    arrows: "←↑→↓↔↕↖↗↘↙➜➤➔"
+    arrows: "<>^v"
   };
 
   const DEFAULT_SETTINGS = {
     prefix: "",
+    middle: "",
     suffix: "",
+    middleIndex: "",
     length: 8,
     quantity: 4,
     custom: "",
@@ -54,7 +56,9 @@
     refs.generatorForm = $("#generatorForm");
     refs.generatorMessage = $("#generatorMessage");
     refs.prefixInput = $("#prefixInput");
+    refs.middleInput = $("#middleInput");
     refs.suffixInput = $("#suffixInput");
+    refs.middleIndexInput = $("#middleIndexInput");
     refs.lengthInput = $("#lengthInput");
     refs.quantityInput = $("#quantityInput");
     refs.customInput = $("#customInput");
@@ -100,29 +104,29 @@
       const button = event.target.closest("[data-copy]");
       if (!button) return;
       await copyText(button.dataset.copy);
-      flashMessage(refs.generatorMessage, "কপি হয়েছে।", true);
+      flashMessage(refs.generatorMessage, "Copied.", true);
     });
 
     refs.copyAllButton.addEventListener("click", async () => {
       if (!generatedCodes.length) {
-        flashMessage(refs.generatorMessage, "কপি করার মতো কোড নেই।");
+        flashMessage(refs.generatorMessage, "There are no codes to copy.");
         return;
       }
       await copyText(generatedCodes.join("\n"));
-      flashMessage(refs.generatorMessage, "সব কোড কপি হয়েছে।", true);
+      flashMessage(refs.generatorMessage, "All codes copied.", true);
     });
 
     refs.clearButton.addEventListener("click", () => {
       generatedCodes = [];
       renderResults([]);
-      flashMessage(refs.generatorMessage, "রেজাল্ট পরিষ্কার করা হয়েছে।", true);
+      flashMessage(refs.generatorMessage, "Results cleared.", true);
     });
 
     refs.resetButton.addEventListener("click", () => {
       applySettings(DEFAULT_SETTINGS);
       saveSettings();
       updateStats();
-      flashMessage(refs.generatorMessage, "সেটিংস রিসেট হয়েছে।", true);
+      flashMessage(refs.generatorMessage, "Settings reset.", true);
     });
 
     refs.logoutButton.addEventListener("click", () => {
@@ -146,7 +150,7 @@
       const batch = history[Number(button.dataset.historyIndex)];
       if (!batch) return;
       await copyText(batch.codes.join("\n"));
-      flashMessage(refs.generatorMessage, "History batch কপি হয়েছে।", true);
+      flashMessage(refs.generatorMessage, "History batch copied.", true);
     });
 
     refs.passwordForm.addEventListener("submit", handlePasswordChange);
@@ -158,7 +162,7 @@
     const ok = await verifyPassword(password);
 
     if (!ok) {
-      flashMessage(refs.loginMessage, "পাসওয়ার্ড সঠিক নয়।");
+      flashMessage(refs.loginMessage, "Password is not correct.");
       refs.adminPassword.select();
       return;
     }
@@ -188,20 +192,20 @@
     const newPassword = refs.newPasswordInput.value;
 
     if (!(await verifyPassword(currentPassword))) {
-      flashMessage(refs.passwordMessage, "বর্তমান পাসওয়ার্ড সঠিক নয়।");
+      flashMessage(refs.passwordMessage, "Current password is not correct.");
       refs.currentPasswordInput.select();
       return;
     }
 
     if (newPassword.trim().length < 4) {
-      flashMessage(refs.passwordMessage, "নতুন পাসওয়ার্ড অন্তত ৪ অক্ষরের দিন।");
+      flashMessage(refs.passwordMessage, "New password must be at least 4 characters.");
       refs.newPasswordInput.select();
       return;
     }
 
     localStorage.setItem(PASSWORD_KEY, await hashText(newPassword));
     refs.passwordForm.reset();
-    flashMessage(refs.passwordMessage, "পাসওয়ার্ড সেভ হয়েছে।", true);
+    flashMessage(refs.passwordMessage, "Password saved.", true);
   }
 
   async function verifyPassword(password) {
@@ -234,14 +238,14 @@
     const built = buildCharacterPool(settings);
 
     if (!built.merged.length) {
-      flashMessage(refs.generatorMessage, "অন্তত একটি টাইপ বা নিজের অক্ষর দিন।");
+      flashMessage(refs.generatorMessage, "Select at least one type or enter custom characters.");
       return;
     }
 
     const codes = [];
     for (let index = 0; index < settings.quantity; index += 1) {
       const randomPart = generateRandomPart(settings.length, built.pools, built.merged, settings.mustInclude);
-      codes.push(`${settings.prefix}${randomPart}${settings.suffix}`);
+      codes.push(composeCode(randomPart, settings));
     }
 
     generatedCodes = codes;
@@ -250,14 +254,18 @@
     renderHistory();
     saveSettings();
     updateStats();
-    flashMessage(refs.generatorMessage, `${codes.length}টি কোড তৈরি হয়েছে।`, true);
+    flashMessage(refs.generatorMessage, `${codes.length} codes generated.`, true);
   }
 
   function collectSettings() {
+    const length = clampNumber(refs.lengthInput.value, 1, 128, DEFAULT_SETTINGS.length);
+
     return {
       prefix: refs.prefixInput.value,
+      middle: refs.middleInput.value,
       suffix: refs.suffixInput.value,
-      length: clampNumber(refs.lengthInput.value, 1, 128, DEFAULT_SETTINGS.length),
+      middleIndex: clampOptionalNumber(refs.middleIndexInput.value, 0, length),
+      length,
       quantity: clampNumber(refs.quantityInput.value, 1, 100, DEFAULT_SETTINGS.quantity),
       custom: refs.customInput.value,
       selectedPools: $$("[data-pool]:checked").map((input) => input.dataset.pool),
@@ -269,7 +277,9 @@
 
   function applySettings(settings) {
     refs.prefixInput.value = settings.prefix;
+    refs.middleInput.value = settings.middle;
     refs.suffixInput.value = settings.suffix;
+    refs.middleIndexInput.value = settings.middleIndex;
     refs.lengthInput.value = settings.length;
     refs.quantityInput.value = settings.quantity;
     refs.customInput.value = settings.custom;
@@ -342,6 +352,15 @@
     }
 
     return shuffle(chars).join("");
+  }
+
+  function composeCode(randomPart, settings) {
+    const position = settings.middleIndex === "" ? Math.floor(randomPart.length / 2) : settings.middleIndex;
+    const safePosition = Math.min(randomPart.length, Math.max(0, position));
+    const left = randomPart.slice(0, safePosition);
+    const right = randomPart.slice(safePosition);
+
+    return `${settings.prefix}${left}${settings.middle}${right}${settings.suffix}`;
   }
 
   function pickChar(chars) {
@@ -421,6 +440,7 @@
         length: settings.length,
         quantity: settings.quantity,
         prefix: settings.prefix,
+        middle: settings.middle,
         suffix: settings.suffix
       }
     });
@@ -439,7 +459,7 @@
     if (!history.length) {
       const empty = document.createElement("p");
       empty.className = "empty-state";
-      empty.textContent = "History খালি।";
+      empty.textContent = "History is empty.";
       refs.historyList.append(empty);
       return;
     }
@@ -466,7 +486,7 @@
       button.className = "copy-button";
       button.type = "button";
       button.dataset.historyIndex = String(index);
-      button.textContent = "Copy batch";
+      button.textContent = "Copy Batch";
 
       meta.append(time, count);
       item.append(meta, sample, button);
@@ -520,6 +540,13 @@
     return Math.min(max, Math.max(min, Math.floor(number)));
   }
 
+  function clampOptionalNumber(value, min, max) {
+    if (value === "") return "";
+    const number = Number(value);
+    if (!Number.isFinite(number)) return "";
+    return Math.min(max, Math.max(min, Math.floor(number)));
+  }
+
   function uniqueChars(value) {
     return Array.from(new Set(Array.from(value))).join("");
   }
@@ -536,7 +563,7 @@
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return "";
 
-    return new Intl.DateTimeFormat("bn-BD", {
+    return new Intl.DateTimeFormat("en-US", {
       dateStyle: "medium",
       timeStyle: "short"
     }).format(date);

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="bn">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,7 @@
           <span></span>
         </div>
         <div>
-          <p class="eyebrow">Admin Panel</p>
+          <p class="eyebrow">Admin Console</p>
           <h1>Random Key Generator</h1>
         </div>
         <p class="system-pill" id="sessionState">Locked</p>
@@ -26,15 +26,15 @@
           <form class="login-panel" id="loginForm" autocomplete="off">
             <div class="panel-heading">
               <p class="eyebrow">Secure Entry</p>
-              <h2>অ্যাডমিন লগইন</h2>
+              <h2>Admin Login</h2>
             </div>
 
             <label class="field">
-              <span>পাসওয়ার্ড</span>
+              <span>Password</span>
               <input id="adminPassword" type="password" placeholder="Admin password" required>
             </label>
 
-            <button class="primary-button" type="submit">লগইন</button>
+            <button class="primary-button" type="submit">Login</button>
             <p class="form-message" id="loginMessage" role="status" aria-live="polite"></p>
           </form>
         </section>
@@ -43,7 +43,7 @@
           <aside class="side-rail">
             <div class="side-title">
               <p class="eyebrow">Control Room</p>
-              <h2>কোড প্যানেল</h2>
+              <h2>Code Panel</h2>
             </div>
 
             <div class="stat-stack">
@@ -62,7 +62,7 @@
             </div>
 
             <button class="ghost-button" id="generateSideButton" type="button">Generate</button>
-            <button class="danger-button" id="logoutButton" type="button">লগআউট</button>
+            <button class="danger-button" id="logoutButton" type="button">Logout</button>
           </aside>
 
           <div class="work-area">
@@ -70,29 +70,39 @@
               <div class="panel-heading wide-heading">
                 <div>
                   <p class="eyebrow">Builder</p>
-                  <h2 id="generatorTitle">পাসওয়ার্ড / কোড তৈরি করুন</h2>
+                  <h2 id="generatorTitle">Create Passwords or Codes</h2>
                 </div>
-                <button class="icon-button" id="resetButton" type="button" title="Reset settings" aria-label="Reset settings">↻</button>
+                <button class="icon-button" id="resetButton" type="button" title="Reset settings" aria-label="Reset settings">R</button>
               </div>
 
               <form id="generatorForm" class="generator-grid">
                 <label class="field">
-                  <span>প্রিফিক্স</span>
-                  <input id="prefixInput" type="text" placeholder="যেমন: VIP-">
+                  <span>Prefix</span>
+                  <input id="prefixInput" type="text" placeholder="Example: VIP-">
                 </label>
 
                 <label class="field">
-                  <span>সাফিক্স</span>
-                  <input id="suffixInput" type="text" placeholder="যেমন: -BD">
+                  <span>Middle Text</span>
+                  <input id="middleInput" type="text" placeholder="Example: MID">
                 </label>
 
                 <label class="field">
-                  <span>র্যান্ডম অক্ষর</span>
+                  <span>Suffix</span>
+                  <input id="suffixInput" type="text" placeholder="Example: -BD">
+                </label>
+
+                <label class="field">
+                  <span>Middle Position</span>
+                  <input id="middleIndexInput" type="number" min="0" max="128" placeholder="Auto">
+                </label>
+
+                <label class="field">
+                  <span>Random Length</span>
                   <input id="lengthInput" type="number" min="1" max="128" value="8">
                 </label>
 
                 <label class="field">
-                  <span>কতগুলো</span>
+                  <span>Quantity</span>
                   <input id="quantityInput" type="number" min="1" max="100" value="4">
                 </label>
 
@@ -106,49 +116,49 @@
                 </div>
 
                 <fieldset class="option-panel">
-                  <legend>টাইপ সিলেক্ট</legend>
+                  <legend>Character Types</legend>
                   <label class="check-tile">
                     <input type="checkbox" data-pool="letters" checked>
-                    <span>ওয়ার্ড / লেটার</span>
+                    <span>Letters</span>
                   </label>
                   <label class="check-tile">
                     <input type="checkbox" data-pool="numbers" checked>
-                    <span>নাম্বার</span>
+                    <span>Numbers</span>
                   </label>
                   <label class="check-tile">
                     <input type="checkbox" data-pool="symbols">
-                    <span>সিম্বল</span>
+                    <span>Symbols</span>
                   </label>
                   <label class="check-tile">
                     <input type="checkbox" data-pool="arrows">
-                    <span>অ্যারো</span>
+                    <span>Arrows</span>
                   </label>
                 </fieldset>
 
                 <fieldset class="option-panel">
-                  <legend>নিয়ন্ত্রণ</legend>
+                  <legend>Rules</legend>
                   <label class="check-tile">
                     <input id="avoidSimilarInput" type="checkbox" checked>
-                    <span>মিল আছে এমন অক্ষর বাদ</span>
+                    <span>Avoid Similar</span>
                   </label>
                   <label class="check-tile">
                     <input id="mustIncludeInput" type="checkbox" checked>
-                    <span>প্রতি টাইপ থেকে অন্তত ১টি</span>
+                    <span>Require Each Type</span>
                   </label>
                   <label class="check-tile">
                     <input id="uppercaseInput" type="checkbox">
-                    <span>সব বড় হাতের</span>
+                    <span>Uppercase Random</span>
                   </label>
                 </fieldset>
 
                 <label class="field custom-field">
-                  <span>নিজের অক্ষর</span>
-                  <textarea id="customInput" rows="3" placeholder="যেমন: ABC789 অথবা @#%"></textarea>
+                  <span>Custom Characters</span>
+                  <textarea id="customInput" rows="3" placeholder="Example: ABC789 or @#%"></textarea>
                 </label>
 
                 <div class="action-row">
                   <button class="primary-button" type="submit">Generate Code</button>
-                  <button class="ghost-button" id="copyAllButton" type="button">সব কপি</button>
+                  <button class="ghost-button" id="copyAllButton" type="button">Copy All</button>
                 </div>
 
                 <p class="form-message generator-message" id="generatorMessage" role="status" aria-live="polite"></p>
@@ -159,22 +169,22 @@
               <div class="panel-heading wide-heading">
                 <div>
                   <p class="eyebrow">Viewer</p>
-                  <h2 id="resultTitle">চার কর্নার রেজাল্ট বক্স</h2>
+                  <h2 id="resultTitle">Corner Frame Results</h2>
                 </div>
-                <button class="icon-button" id="clearButton" type="button" title="Clear results" aria-label="Clear results">×</button>
+                <button class="icon-button" id="clearButton" type="button" title="Clear results" aria-label="Clear results">X</button>
               </div>
 
               <div class="result-grid" id="resultGrid" aria-live="polite"></div>
-              <p class="empty-state" id="emptyState">এখনো কোনো কোড তৈরি হয়নি।</p>
+              <p class="empty-state" id="emptyState">No codes generated yet.</p>
             </section>
 
             <section class="tool-panel history-panel" aria-labelledby="historyTitle">
               <div class="panel-heading wide-heading">
                 <div>
                   <p class="eyebrow">History</p>
-                  <h2 id="historyTitle">শেষ তৈরি করা ব্যাচ</h2>
+                  <h2 id="historyTitle">Recent Batches</h2>
                 </div>
-                <button class="icon-button" id="clearHistoryButton" type="button" title="Clear history" aria-label="Clear history">⌫</button>
+                <button class="icon-button" id="clearHistoryButton" type="button" title="Clear history" aria-label="Clear history">C</button>
               </div>
               <div class="history-list" id="historyList"></div>
             </section>
@@ -182,18 +192,18 @@
             <section class="tool-panel password-panel" aria-labelledby="passwordTitle">
               <div class="panel-heading">
                 <p class="eyebrow">Access</p>
-                <h2 id="passwordTitle">অ্যাডমিন পাসওয়ার্ড বদলান</h2>
+                <h2 id="passwordTitle">Change Admin Password</h2>
               </div>
               <form id="passwordForm" class="password-form">
                 <label class="field">
-                  <span>বর্তমান পাসওয়ার্ড</span>
+                  <span>Current Password</span>
                   <input id="currentPasswordInput" type="password" autocomplete="current-password">
                 </label>
                 <label class="field">
-                  <span>নতুন পাসওয়ার্ড</span>
+                  <span>New Password</span>
                   <input id="newPasswordInput" type="password" autocomplete="new-password" minlength="4">
                 </label>
-                <button class="ghost-button" type="submit">সেভ</button>
+                <button class="ghost-button" type="submit">Save</button>
                 <p class="form-message" id="passwordMessage" role="status" aria-live="polite"></p>
               </form>
             </section>
